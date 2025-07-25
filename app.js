@@ -39,7 +39,7 @@ app.get('/driver/permission', async (req, res) => {
         }
 
         const [rows] = await pool.query(
-            `SELECT firstName, phoneNumber, globalDnd, safetyCall, safetyMessage, hosSupport, maintainanceCall, maintainanceMessage, dispatchCall, dispatchMessage, accountCall, accountMessage  
+            `SELECT driverId, status, firstName, lastName, phoneNumber, globalDnd, safetyCall, safetyMessage, hosSupport, maintainanceCall, maintainanceMessage, dispatchCall, dispatchMessage, accountCall, accountMessage  
        FROM driversDirectory 
        WHERE telegramId = ?`,
             [userId]
