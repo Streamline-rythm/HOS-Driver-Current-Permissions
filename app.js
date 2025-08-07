@@ -89,6 +89,35 @@ app.get('/driver/permission/username', async (req, res) => {
     }
 });
 
+app.get('/driver/permission/driverId', async (req, res) => {
+    try {
+        const driverId = req.query.driverId?.trim();
+
+        if (!driverId) {
+            return res.status(400).json({ error: 'Missing required parameter: driverId' });
+        }
+
+        console.log("Driver's driverId is", driverId);
+
+        const [rows] = await pool.query(
+            `SELECT driverId, status, firstName, lastName, phoneNumber, globalDnd, safetyCall, safetyMessage, hosSupport, maintainanceCall, maintainanceMessage, dispatchCall, dispatchMessage, accountCall, accountMessage  
+       FROM driversDirectory 
+       WHERE driverId = ?`,
+            [driverId]
+        );
+
+        if (!rows.length) {
+            return res.status(404).json({ error: `Driver with userId '${driverId}' not found` });
+        }
+
+        return res.status(200).json(rows[0]);
+
+    } catch (err) {
+        console.error('❌ Error fetching driver data:', err);
+        return res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
 
 const PORT = process.env.PORT || 8080;
 server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
