@@ -98,12 +98,14 @@ app.get('/driver/permission/driverId', async (req, res) => {
         }
 
         console.log("Driver's driverId is", driverId);
+        const firstName = driverId.trim().split(" ")[1].trim();
+        const lastName = driverId.trim().split(" ")[2].trim();
 
         const [rows] = await pool.query(
             `SELECT driverId, status, firstName, lastName, phoneNumber, globalDnd, safetyCall, safetyMessage, hosSupport, maintainanceCall, maintainanceMessage, dispatchCall, dispatchMessage, accountCall, accountMessage  
        FROM driversDirectory 
-       WHERE driverId = ?`,
-            [driverId]
+       WHERE firstName = ? And lastName = ?`,
+            [firstName, lastName]
         );
 
         if (!rows.length) {
